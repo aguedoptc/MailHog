@@ -139,15 +139,15 @@ func (maildir *Maildir) List(start, limit int) (*data.Messages, error) {
 	if err != nil {
 		return nil, err
 	}
-	sort.Slice(n, func(i, j int) bool {
-		return n[i].ModTime().After(n[j].ModTime())
-	})
 
 	for _, fileinfo := range n {
 		b, err := ioutil.ReadFile(filepath.Join(maildir.Path, fileinfo.Name()))
 		if err != nil {
 			return nil, err
 		}
+		sort.Slice(n, func(i, j int) bool {
+			return n[i].ModTime().After(n[j].ModTime())
+		})
 		msg := data.FromBytes(b)
 		// FIXME domain
 		m := *msg.Parse("mailhog.example")
