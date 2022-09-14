@@ -2,14 +2,15 @@
 # MailHog Dockerfile
 #
 
-FROM golang:1.18-alpine as builder
+FROM golang:1.18 as builder
+
+COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates
+RUN update-ca-certificates
 
 # Install MailHog:
-RUN apk --no-cache add --virtual build-dependencies \
-    git \
-  && mkdir -p /root/gocode \
+RUN mkdir -p /root/gocode \
   && export GOPATH=/root/gocode \
-  && go install github.com/aguedo/MailHog@latest
+  && go install github.com/aguedoptc/MailHog@latest
 
 FROM alpine:3
 # Add mailhog user/group with uid/gid 1000.
